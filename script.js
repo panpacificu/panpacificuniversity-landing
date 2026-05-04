@@ -1,344 +1,139 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Panpacific University QR Hub</title>
+const SCRIPT_URL = "https://script.google.com/a/macros/panpacificu.edu.ph/s/AKfycbxN2vocL7r6q2TnZDtQURQsmyaF57jUtpMrIGUd7iv15GTV07B0PsV3VpopajUs5Q1UGw/exec";
 
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+const locationModal = document.getElementById("locationModal");
+const allowLocationBtn = document.getElementById("allowLocationBtn");
+const skipLocationBtn = document.getElementById("skipLocationBtn");
 
-  <style>
-    :root {
-      --pu-green: #456f30;
-      --pu-blue: #1f3f82;
-      --white: #ffffff;
-      --off-white: #f8faf7;
-      --dark: #152018;
-      --muted: #667085;
-      --border: #dfe7dc;
-      --shadow: 0 16px 40px rgba(21, 32, 24, 0.09);
-      --radius: 22px;
+function sendToSheet(data) {
+  fetch(SCRIPT_URL, {
+    method: "POST",
+    mode: "no-cors",
+    body: JSON.stringify(data)
+  });
+}
+
+async function getLocationDetails() {
+  return new Promise((resolve) => {
+    if (!navigator.geolocation) {
+      resolve({
+        town: "Location Not Supported",
+        latitude: "",
+        longitude: "",
+        accuracy: ""
+      });
+      return;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        const accuracy = position.coords.accuracy;
 
-    body {
-      font-family: "Inter", sans-serif;
-      background: linear-gradient(180deg, var(--white) 0%, var(--off-white) 100%);
-      color: var(--dark);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+        try {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
+          );
 
-    header {
-      background: var(--white);
-      border-bottom: 1px solid var(--border);
-      padding: 28px 20px;
-    }
+          const data = await response.json();
+          const address = data.address || {};
 
-    .container {
-      width: min(1180px, 92%);
-      margin: 0 auto;
-    }
+          const town =
+            address.city ||
+            address.town ||
+            address.municipality ||
+            address.village ||
+            address.suburb ||
+            address.county ||
+            "Unknown";
 
-    .brand {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 14px;
-      color: var(--pu-green);
-      font-weight: 800;
-      font-size: clamp(1.2rem, 3vw, 1.8rem);
-      letter-spacing: -0.04em;
-      text-align: center;
-    }
+          resolve({
+            town: town,
+            latitude: lat,
+            longitude: lng,
+            accuracy: accuracy
+          });
+        } catch (error) {
+          resolve({
+            town: "Reverse Geocoding Failed",
+            latitude: lat,
+            longitude: lng,
+            accuracy: accuracy
+          });
+        }
+      },
+      (error) => {
+        let message = "Location Error";
 
-    .logo-mark {
-      width: 48px;
-      height: 48px;
-      border-radius: 16px;
-      background: linear-gradient(135deg, var(--pu-green) 0%, var(--pu-green) 50%, var(--pu-blue) 50%, var(--pu-blue) 100%);
-      color: var(--white);
-      display: grid;
-      place-items: center;
-      font-weight: 900;
-    }
+        if (error.code === 1) message = "Location Permission Denied";
+        if (error.code === 2) message = "Location Unavailable";
+        if (error.code === 3) message = "Location Timeout";
 
-    main {
-      padding: 44px 0 70px;
-      flex: 1;
-    }
-
-    .qr-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 24px;
-    }
-
-    .qr-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      text-align: center;
-      padding: 24px;
-      transition: 0.25s ease;
-    }
-
-    .qr-card:hover {
-      transform: translateY(-5px);
-    }
-
-    .qr-card h3 {
-      color: var(--pu-green);
-      margin-bottom: 8px;
-      font-size: 1.15rem;
-    }
-
-    .qr-card p {
-      font-size: 0.92rem;
-      color: var(--muted);
-      margin-bottom: 18px;
-      min-height: 44px;
-    }
-
-    .qr-box {
-      background: var(--off-white);
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 18px;
-      margin-bottom: 18px;
-    }
-
-    .qr-box img {
-      width: 100%;
-      max-width: 190px;
-      background: var(--white);
-      border-radius: 14px;
-      padding: 8px;
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      min-height: 44px;
-      padding: 10px 16px;
-      border-radius: 14px;
-      text-decoration: none;
-      font-weight: 800;
-      font-size: 0.9rem;
-      margin: 4px;
-      transition: 0.2s ease;
-      background: var(--pu-blue);
-      color: var(--white);
-    }
-
-    .btn:hover {
-      opacity: 0.9;
-      transform: translateY(-1px);
-    }
-
-    /* LOCATION MODAL */
-
-    .location-modal {
-      position: fixed;
-      inset: 0;
-      background: rgba(21, 32, 24, 0.72);
-      backdrop-filter: blur(8px);
-      display: grid;
-      place-items: center;
-      padding: 20px;
-      z-index: 999;
-    }
-
-    .location-card {
-      width: min(460px, 100%);
-      background: var(--white);
-      border-radius: 26px;
-      padding: 28px;
-      text-align: center;
-      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.24);
-    }
-
-    .location-card .logo-mark {
-      margin: 0 auto 16px;
-    }
-
-    .location-card h2 {
-      color: var(--pu-green);
-      font-size: 1.5rem;
-      margin-bottom: 10px;
-    }
-
-    .location-card p {
-      color: var(--muted);
-      font-size: 0.95rem;
-      line-height: 1.55;
-      margin-bottom: 20px;
-    }
-
-    /* PRIMARY BUTTON */
-
-    .primary-btn {
-      width: 100%;
-      border: 0;
-      border-radius: 16px;
-      padding: 16px;
-      font: inherit;
-      font-weight: 800;
-      cursor: pointer;
-      background: var(--pu-blue);
-      color: var(--white);
-      font-size: 1rem;
-      transition: 0.2s ease;
-    }
-
-    .primary-btn:hover {
-      opacity: 0.92;
-      transform: translateY(-1px);
-    }
-
-    /* SECONDARY BUTTON */
-
-    .secondary-btn {
-      background: none;
-      border: none;
-      margin-top: 10px;
-      font-size: 0.85rem;
-      color: var(--muted);
-      cursor: pointer;
-      text-decoration: underline;
-      font-weight: 600;
-      padding: 6px;
-    }
-
-    .secondary-btn:hover {
-      color: var(--pu-green);
-    }
-
-    /* FOOTER */
-
-    .footer {
-      border-top: 1px solid var(--border);
-      padding: 18px 20px;
-      text-align: center;
-      background: var(--white);
-    }
-
-    .footer p {
-      font-size: 0.85rem;
-      color: var(--muted);
-      font-weight: 600;
-    }
-
-    @media (max-width: 640px) {
-      .brand {
-        flex-direction: column;
+        resolve({
+          town: message,
+          latitude: "",
+          longitude: "",
+          accuracy: ""
+        });
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 15000,
+        maximumAge: 0
       }
-    }
-  </style>
-</head>
-<body>
+    );
+  });
+}
 
-<header>
-  <div class="container">
-    <div class="brand">
-      <div class="logo-mark">PU</div>
-      <span>Panpacific University QR Hub</span>
-    </div>
-  </div>
-</header>
+async function logVisitWithLocation() {
+  const location = await getLocationDetails();
 
-<!-- LOCATION POPUP -->
+  sendToSheet({
+    type: "visit",
+    town: location.town,
+    latitude: location.latitude,
+    longitude: location.longitude,
+    accuracy: location.accuracy,
+    referrer: document.referrer || "none",
+    device: navigator.userAgent,
+    page: "QR Hub"
+  });
+}
 
-<div class="location-modal" id="locationModal">
-  <div class="location-card">
-    <div class="logo-mark">PU</div>
-    <h2>Help Us Improve QR Access</h2>
-    <p>
-      Please allow location access to help us identify which town or area this QR Hub is being accessed from.
-    </p>
+function logVisitWithoutLocation() {
+  sendToSheet({
+    type: "visit",
+    town: "Skipped Location",
+    latitude: "",
+    longitude: "",
+    accuracy: "",
+    referrer: document.referrer || "none",
+    device: navigator.userAgent,
+    page: "QR Hub"
+  });
+}
 
-    <button id="allowLocationBtn" class="primary-btn">
-      Allow Location
-    </button>
+function logClick(clickedItem, destinationLink) {
+  sendToSheet({
+    type: "click",
+    clicked: clickedItem,
+    link: destinationLink,
+    page: "QR Hub"
+  });
+}
 
-    <button id="skipLocationBtn" class="secondary-btn">
-      Continue without location
-    </button>
-  </div>
-</div>
+allowLocationBtn.addEventListener("click", async () => {
+  locationModal.style.display = "none";
+  await logVisitWithLocation();
+});
 
-<!-- MAIN -->
+skipLocationBtn.addEventListener("click", () => {
+  locationModal.style.display = "none";
+  logVisitWithoutLocation();
+});
 
-<main>
-  <div class="container">
-    <div class="qr-grid">
-
-      <div class="qr-card">
-        <h3>Website</h3>
-        <p>Visit the official Panpacific University website.</p>
-        <div class="qr-box">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://www.panpacificu.edu.ph">
-        </div>
-        <a class="btn track-click" data-clicked="Website" href="https://www.panpacificu.edu.ph" target="_blank">Open</a>
-      </div>
-
-      <div class="qr-card">
-        <h3>Facebook</h3>
-        <p>Follow the official Facebook page for university updates.</p>
-        <div class="qr-box">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://www.facebook.com/panpacificu">
-        </div>
-        <a class="btn track-click" data-clicked="Facebook" href="https://www.facebook.com/panpacificu" target="_blank">Open</a>
-      </div>
-
-      <div class="qr-card">
-        <h3>Instagram</h3>
-        <p>Connect with Panpacific University on Instagram.</p>
-        <div class="qr-box">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://www.instagram.com/panpacificu_">
-        </div>
-        <a class="btn track-click" data-clicked="Instagram" href="https://www.instagram.com/panpacificu_" target="_blank">Open</a>
-      </div>
-
-      <div class="qr-card">
-        <h3>TikTok</h3>
-        <p>Watch official university highlights and short-form content.</p>
-        <div class="qr-box">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://www.tiktok.com/@panpacificu">
-        </div>
-        <a class="btn track-click" data-clicked="TikTok" href="https://www.tiktok.com/@panpacificu" target="_blank">Open</a>
-      </div>
-
-      <div class="qr-card">
-        <h3>Enrollment</h3>
-        <p>Register online for new student enrollment.</p>
-        <div class="qr-box">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://bit.ly/WelcometoPanpacificU">
-        </div>
-        <a class="btn track-click" data-clicked="Enrollment" href="https://bit.ly/WelcometoPanpacificU" target="_blank">Open</a>
-      </div>
-
-    </div>
-  </div>
-</main>
-
-<footer class="footer">
-  <div class="container">
-    <p>QR Hub • Version 1.2 • Updated May 2026</p>
-  </div>
-</footer>
-
-<script src="script.js"></script>
-
-</body>
-</html>
+document.querySelectorAll(".track-click").forEach(button => {
+  button.addEventListener("click", function () {
+    logClick(this.dataset.clicked, this.href);
+  });
+});
