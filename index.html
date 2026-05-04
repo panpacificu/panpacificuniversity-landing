@@ -137,9 +137,6 @@
       font-size: 0.9rem;
       margin: 4px;
       transition: 0.2s ease;
-    }
-
-    .btn-primary {
       background: var(--pu-blue);
       color: var(--white);
     }
@@ -148,6 +145,8 @@
       opacity: 0.9;
       transform: translateY(-1px);
     }
+
+    /* LOCATION MODAL */
 
     .location-modal {
       position: fixed;
@@ -186,26 +185,46 @@
       margin-bottom: 20px;
     }
 
-    .location-card button {
+    /* PRIMARY BUTTON */
+
+    .primary-btn {
       width: 100%;
       border: 0;
-      border-radius: 14px;
-      padding: 14px 16px;
+      border-radius: 16px;
+      padding: 16px;
       font: inherit;
       font-weight: 800;
       cursor: pointer;
-      margin-top: 10px;
-    }
-
-    #allowLocationBtn {
       background: var(--pu-blue);
       color: var(--white);
+      font-size: 1rem;
+      transition: 0.2s ease;
     }
 
-    #skipLocationBtn {
-      background: #edf5e8;
+    .primary-btn:hover {
+      opacity: 0.92;
+      transform: translateY(-1px);
+    }
+
+    /* SECONDARY BUTTON */
+
+    .secondary-btn {
+      background: none;
+      border: none;
+      margin-top: 10px;
+      font-size: 0.85rem;
+      color: var(--muted);
+      cursor: pointer;
+      text-decoration: underline;
+      font-weight: 600;
+      padding: 6px;
+    }
+
+    .secondary-btn:hover {
       color: var(--pu-green);
     }
+
+    /* FOOTER */
 
     .footer {
       border-top: 1px solid var(--border);
@@ -224,10 +243,6 @@
       .brand {
         flex-direction: column;
       }
-
-      main {
-        padding-top: 30px;
-      }
     }
   </style>
 </head>
@@ -242,19 +257,27 @@
   </div>
 </header>
 
+<!-- LOCATION POPUP -->
+
 <div class="location-modal" id="locationModal">
   <div class="location-card">
     <div class="logo-mark">PU</div>
     <h2>Help Us Improve QR Access</h2>
     <p>
       Please allow location access to help us identify which town or area this QR Hub is being accessed from.
-      Your location will only be used for QR Hub analytics.
     </p>
 
-    <button id="allowLocationBtn">Allow Location</button>
-    <button id="skipLocationBtn">Continue Without Location</button>
+    <button id="allowLocationBtn" class="primary-btn">
+      Allow Location
+    </button>
+
+    <button id="skipLocationBtn" class="secondary-btn">
+      Continue without location
+    </button>
   </div>
 </div>
+
+<!-- MAIN -->
 
 <main>
   <div class="container">
@@ -264,45 +287,45 @@
         <h3>Website</h3>
         <p>Visit the official Panpacific University website.</p>
         <div class="qr-box">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://www.panpacificu.edu.ph" alt="Website QR Code">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://www.panpacificu.edu.ph">
         </div>
-        <a class="btn btn-primary track-click" data-clicked="Website" href="https://www.panpacificu.edu.ph" target="_blank">Open</a>
+        <a class="btn track-click" data-clicked="Website" href="https://www.panpacificu.edu.ph" target="_blank">Open</a>
       </div>
 
       <div class="qr-card">
         <h3>Facebook</h3>
         <p>Follow the official Facebook page for university updates.</p>
         <div class="qr-box">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://www.facebook.com/panpacificu" alt="Facebook QR Code">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://www.facebook.com/panpacificu">
         </div>
-        <a class="btn btn-primary track-click" data-clicked="Facebook" href="https://www.facebook.com/panpacificu" target="_blank">Open</a>
+        <a class="btn track-click" data-clicked="Facebook" href="https://www.facebook.com/panpacificu" target="_blank">Open</a>
       </div>
 
       <div class="qr-card">
         <h3>Instagram</h3>
         <p>Connect with Panpacific University on Instagram.</p>
         <div class="qr-box">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://www.instagram.com/panpacificu_" alt="Instagram QR Code">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://www.instagram.com/panpacificu_">
         </div>
-        <a class="btn btn-primary track-click" data-clicked="Instagram" href="https://www.instagram.com/panpacificu_" target="_blank">Open</a>
+        <a class="btn track-click" data-clicked="Instagram" href="https://www.instagram.com/panpacificu_" target="_blank">Open</a>
       </div>
 
       <div class="qr-card">
         <h3>TikTok</h3>
         <p>Watch official university highlights and short-form content.</p>
         <div class="qr-box">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://www.tiktok.com/@panpacificu" alt="TikTok QR Code">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://www.tiktok.com/@panpacificu">
         </div>
-        <a class="btn btn-primary track-click" data-clicked="TikTok" href="https://www.tiktok.com/@panpacificu" target="_blank">Open</a>
+        <a class="btn track-click" data-clicked="TikTok" href="https://www.tiktok.com/@panpacificu" target="_blank">Open</a>
       </div>
 
       <div class="qr-card">
         <h3>Enrollment</h3>
         <p>Register online for new student enrollment.</p>
         <div class="qr-box">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://bit.ly/WelcometoPanpacificU" alt="Enrollment QR Code">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://bit.ly/WelcometoPanpacificU">
         </div>
-        <a class="btn btn-primary track-click" data-clicked="Enrollment" href="https://bit.ly/WelcometoPanpacificU" target="_blank">Open</a>
+        <a class="btn track-click" data-clicked="Enrollment" href="https://bit.ly/WelcometoPanpacificU" target="_blank">Open</a>
       </div>
 
     </div>
