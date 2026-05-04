@@ -67,8 +67,6 @@
       display: grid;
       place-items: center;
       font-weight: 900;
-      letter-spacing: -0.05em;
-      flex: 0 0 auto;
     }
 
     main {
@@ -86,7 +84,6 @@
       border: 1px solid var(--border);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      overflow: hidden;
       text-align: center;
       padding: 24px;
       transition: 0.25s ease;
@@ -94,19 +91,16 @@
 
     .qr-card:hover {
       transform: translateY(-5px);
-      box-shadow: 0 20px 45px rgba(21, 32, 24, 0.13);
     }
 
     .qr-card h3 {
       color: var(--pu-green);
       margin-bottom: 8px;
       font-size: 1.15rem;
-      letter-spacing: -0.03em;
     }
 
     .qr-card p {
       font-size: 0.92rem;
-      line-height: 1.5;
       color: var(--muted);
       margin-bottom: 18px;
       min-height: 44px;
@@ -123,8 +117,6 @@
     .qr-box img {
       width: 100%;
       max-width: 190px;
-      aspect-ratio: 1 / 1;
-      object-fit: contain;
       background: var(--white);
       border-radius: 14px;
       padding: 8px;
@@ -154,25 +146,6 @@
       color: var(--pu-green);
       border: 1px solid #d6e7ce;
     }
-
-    .btn:hover {
-      opacity: 0.9;
-      transform: translateY(-1px);
-    }
-
-    @media (max-width: 640px) {
-      header {
-        padding: 24px 16px;
-      }
-
-      .brand {
-        flex-direction: column;
-      }
-
-      main {
-        padding-top: 30px;
-      }
-    }
   </style>
 </head>
 <body>
@@ -194,55 +167,51 @@
         <h3>Website</h3>
         <p>Visit the official Panpacific University website.</p>
         <div class="qr-box">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://www.panpacificu.edu.ph" alt="Panpacific University Website QR Code">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://www.panpacificu.edu.ph">
         </div>
-        <a class="btn btn-primary" href="https://www.panpacificu.edu.ph" target="_blank">Open</a>
-        <a class="btn btn-secondary" href="https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=https://www.panpacificu.edu.ph" download>Download</a>
+        <a class="btn btn-primary track-click" data-clicked="Website" href="https://www.panpacificu.edu.ph" target="_blank">Open</a>
       </div>
 
       <div class="qr-card">
         <h3>Facebook</h3>
         <p>Follow the official Facebook page for university updates.</p>
         <div class="qr-box">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://www.facebook.com/panpacificu" alt="Panpacific University Facebook QR Code">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://www.facebook.com/panpacificu">
         </div>
-        <a class="btn btn-primary" href="https://www.facebook.com/panpacificu" target="_blank">Open</a>
-        <a class="btn btn-secondary" href="https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=https://www.facebook.com/panpacificu" download>Download</a>
+        <a class="btn btn-primary track-click" data-clicked="Facebook" href="https://www.facebook.com/panpacificu" target="_blank">Open</a>
       </div>
 
       <div class="qr-card">
         <h3>Instagram</h3>
         <p>Connect with Panpacific University on Instagram.</p>
         <div class="qr-box">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://www.instagram.com/panpacificu_" alt="Panpacific University Instagram QR Code">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://www.instagram.com/panpacificu_">
         </div>
-        <a class="btn btn-primary" href="https://www.instagram.com/panpacificu_" target="_blank">Open</a>
-        <a class="btn btn-secondary" href="https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=https://www.instagram.com/panpacificu_" download>Download</a>
+        <a class="btn btn-primary track-click" data-clicked="Instagram" href="https://www.instagram.com/panpacificu_" target="_blank">Open</a>
       </div>
 
       <div class="qr-card">
         <h3>TikTok</h3>
         <p>Watch official university highlights and short-form content.</p>
         <div class="qr-box">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://www.tiktok.com/@panpacificu" alt="Panpacific University TikTok QR Code">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://www.tiktok.com/@panpacificu">
         </div>
-        <a class="btn btn-primary" href="https://www.tiktok.com/@panpacificu" target="_blank">Open</a>
-        <a class="btn btn-secondary" href="https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=https://www.tiktok.com/@panpacificu" download>Download</a>
+        <a class="btn btn-primary track-click" data-clicked="TikTok" href="https://www.tiktok.com/@panpacificu" target="_blank">Open</a>
       </div>
 
       <div class="qr-card">
         <h3>Enrollment</h3>
         <p>Register online for new student enrollment.</p>
         <div class="qr-box">
-          <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://bit.ly/WelcometoPanpacificU" alt="Panpacific University Enrollment QR Code">
+          <img src="https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=https://bit.ly/WelcometoPanpacificU">
         </div>
-        <a class="btn btn-primary" href="https://bit.ly/WelcometoPanpacificU" target="_blank">Open</a>
-        <a class="btn btn-secondary" href="https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=https://bit.ly/WelcometoPanpacificU" download>Download</a>
+        <a class="btn btn-primary track-click" data-clicked="Enrollment" href="https://bit.ly/WelcometoPanpacificU" target="_blank">Open</a>
       </div>
 
     </div>
   </div>
 </main>
 
+<script src="script.js"></script>
 </body>
 </html>
