@@ -1,25 +1,89 @@
 const SCRIPT_URL = "https://script.google.com/a/macros/panpacificu.edu.ph/s/AKfycbxN2vocL7r6q2TnZDtQURQsmyaF57jUtpMrIGUd7iv15GTV07B0PsV3VpopajUs5Q1UGw/exec";
 
-function getSource() {
-  const params = new URLSearchParams(window.location.search);
-  return params.get("source") || "direct";
-}
-
 function sendToSheet(data) {
   fetch(SCRIPT_URL, {
     method: "POST",
     mode: "no-cors",
-    headers: {
-      "Content-Type": "application/json"
-    },
     body: JSON.stringify(data)
   });
 }
 
-function logVisit() {
+async function getLocationDetails() {
+  return new Promise((resolve) => {
+    if (!navigator.geolocation) {
+      resolve({
+        town: "Location Not Supported",
+        latitude: "",
+        longitude: "",
+        accuracy: ""
+      });
+      return;
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const lat = position.coords.latitude;
+        const lng = position.coords.longitude;
+        const accuracy = position.coords.accuracy;
+
+        try {
+          const response = await fetch(
+            `https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lng}`
+          );
+
+          const data = await response.json();
+          const address = data.address || {};
+
+          const town =
+            address.city ||
+            address.town ||
+            address.municipality ||
+            address.village ||
+            address.suburb ||
+            address.county ||
+            "Unknown";
+
+          resolve({
+            town: town,
+            latitude: lat,
+            longitude: lng,
+            accuracy: accuracy
+          });
+        } catch (error) {
+          resolve({
+            town: "Reverse Geocoding Failed",
+            latitude: lat,
+            longitude: lng,
+            accuracy: accuracy
+          });
+        }
+      },
+      () => {
+        resolve({
+          town: "Location Denied",
+          latitude: "",
+          longitude: "",
+          accuracy: ""
+        });
+      },
+      {
+        enableHighAccuracy: true,
+        timeout: 7000,
+        maximumAge: 0
+      }
+    );
+  });
+}
+
+async function logVisit() {
+  const location = await getLocationDetails();
+
   sendToSheet({
     type: "visit",
-    source: getSource(),
+    town: location.town,
+    latitude: location.latitude,
+    longitude: location.longitude,
+    accuracy: location.accuracy,
     referrer: document.referrer || "none",
     device: navigator.userAgent,
     page: "QR Hub"
@@ -29,9 +93,9 @@ function logVisit() {
 function logClick(clickedItem, destinationLink) {
   sendToSheet({
     type: "click",
-    source: getSource(),
     clicked: clickedItem,
-    link: destinationLink
+    link: destinationLink,
+    page: "QR Hub"
   });
 }
 
