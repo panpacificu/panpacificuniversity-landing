@@ -33,6 +33,8 @@
       background: linear-gradient(180deg, var(--white) 0%, var(--off-white) 100%);
       color: var(--dark);
       min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
     header {
@@ -71,6 +73,7 @@
 
     main {
       padding: 44px 0 70px;
+      flex: 1;
     }
 
     .qr-grid {
@@ -146,6 +149,27 @@
       color: var(--pu-green);
       border: 1px solid #d6e7ce;
     }
+
+    .btn:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    /* FOOTER */
+
+    .footer {
+      border-top: 1px solid var(--border);
+      padding: 18px 20px;
+      text-align: center;
+      background: var(--white);
+    }
+
+    .footer p {
+      font-size: 0.85rem;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
   </style>
 </head>
 <body>
@@ -212,6 +236,13 @@
   </div>
 </main>
 
+<footer class="footer">
+  <div class="container">
+    <p>QR Hub • Version 1.0 • Updated May 2026</p>
+  </div>
+</footer>
+
 <script src="script.js"></script>
+
 </body>
 </html>
