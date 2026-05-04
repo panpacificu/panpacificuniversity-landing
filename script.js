@@ -1,4 +1,4 @@
-const SCRIPT_URL = "PASTE_YOUR_GOOGLE_APPS_SCRIPT_WEB_APP_URL_HERE";
+const SCRIPT_URL = "https://script.google.com/a/macros/panpacificu.edu.ph/s/AKfycbxN2vocL7r6q2TnZDtQURQsmyaF57jUtpMrIGUd7iv15GTV07B0PsV3VpopajUs5Q1UGw/exec";
 
 function getSource() {
   const params = new URLSearchParams(window.location.search);
