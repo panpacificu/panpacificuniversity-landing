@@ -1,5 +1,9 @@
 const SCRIPT_URL = "https://script.google.com/a/macros/panpacificu.edu.ph/s/AKfycbxN2vocL7r6q2TnZDtQURQsmyaF57jUtpMrIGUd7iv15GTV07B0PsV3VpopajUs5Q1UGw/exec";
 
+const locationModal = document.getElementById("locationModal");
+const allowLocationBtn = document.getElementById("allowLocationBtn");
+const skipLocationBtn = document.getElementById("skipLocationBtn");
+
 function sendToSheet(data) {
   fetch(SCRIPT_URL, {
     method: "POST",
@@ -58,9 +62,15 @@ async function getLocationDetails() {
           });
         }
       },
-      () => {
+      (error) => {
+        let message = "Location Error";
+
+        if (error.code === 1) message = "Location Permission Denied";
+        if (error.code === 2) message = "Location Unavailable";
+        if (error.code === 3) message = "Location Timeout";
+
         resolve({
-          town: "Location Denied",
+          town: message,
           latitude: "",
           longitude: "",
           accuracy: ""
@@ -68,14 +78,14 @@ async function getLocationDetails() {
       },
       {
         enableHighAccuracy: true,
-        timeout: 7000,
+        timeout: 15000,
         maximumAge: 0
       }
     );
   });
 }
 
-async function logVisit() {
+async function logVisitWithLocation() {
   const location = await getLocationDetails();
 
   sendToSheet({
@@ -84,6 +94,19 @@ async function logVisit() {
     latitude: location.latitude,
     longitude: location.longitude,
     accuracy: location.accuracy,
+    referrer: document.referrer || "none",
+    device: navigator.userAgent,
+    page: "QR Hub"
+  });
+}
+
+function logVisitWithoutLocation() {
+  sendToSheet({
+    type: "visit",
+    town: "Skipped Location",
+    latitude: "",
+    longitude: "",
+    accuracy: "",
     referrer: document.referrer || "none",
     device: navigator.userAgent,
     page: "QR Hub"
@@ -99,7 +122,15 @@ function logClick(clickedItem, destinationLink) {
   });
 }
 
-window.addEventListener("load", logVisit);
+allowLocationBtn.addEventListener("click", async () => {
+  locationModal.style.display = "none";
+  await logVisitWithLocation();
+});
+
+skipLocationBtn.addEventListener("click", () => {
+  locationModal.style.display = "none";
+  logVisitWithoutLocation();
+});
 
 document.querySelectorAll(".track-click").forEach(button => {
   button.addEventListener("click", function () {
