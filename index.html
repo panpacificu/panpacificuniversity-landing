@@ -149,6 +149,64 @@
       transform: translateY(-1px);
     }
 
+    .location-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(21, 32, 24, 0.72);
+      backdrop-filter: blur(8px);
+      display: grid;
+      place-items: center;
+      padding: 20px;
+      z-index: 999;
+    }
+
+    .location-card {
+      width: min(460px, 100%);
+      background: var(--white);
+      border-radius: 26px;
+      padding: 28px;
+      text-align: center;
+      box-shadow: 0 30px 80px rgba(0, 0, 0, 0.24);
+    }
+
+    .location-card .logo-mark {
+      margin: 0 auto 16px;
+    }
+
+    .location-card h2 {
+      color: var(--pu-green);
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    .location-card p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      line-height: 1.55;
+      margin-bottom: 20px;
+    }
+
+    .location-card button {
+      width: 100%;
+      border: 0;
+      border-radius: 14px;
+      padding: 14px 16px;
+      font: inherit;
+      font-weight: 800;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+
+    #allowLocationBtn {
+      background: var(--pu-blue);
+      color: var(--white);
+    }
+
+    #skipLocationBtn {
+      background: #edf5e8;
+      color: var(--pu-green);
+    }
+
     .footer {
       border-top: 1px solid var(--border);
       padding: 18px 20px;
@@ -160,6 +218,16 @@
       font-size: 0.85rem;
       color: var(--muted);
       font-weight: 600;
+    }
+
+    @media (max-width: 640px) {
+      .brand {
+        flex-direction: column;
+      }
+
+      main {
+        padding-top: 30px;
+      }
     }
   </style>
 </head>
@@ -173,6 +241,20 @@
     </div>
   </div>
 </header>
+
+<div class="location-modal" id="locationModal">
+  <div class="location-card">
+    <div class="logo-mark">PU</div>
+    <h2>Help Us Improve QR Access</h2>
+    <p>
+      Please allow location access to help us identify which town or area this QR Hub is being accessed from.
+      Your location will only be used for QR Hub analytics.
+    </p>
+
+    <button id="allowLocationBtn">Allow Location</button>
+    <button id="skipLocationBtn">Continue Without Location</button>
+  </div>
+</div>
 
 <main>
   <div class="container">
@@ -229,7 +311,7 @@
 
 <footer class="footer">
   <div class="container">
-    <p>QR Hub • Version 1.1 • Updated May 2026</p>
+    <p>QR Hub • Version 1.2 • Updated May 2026</p>
   </div>
 </footer>
 
